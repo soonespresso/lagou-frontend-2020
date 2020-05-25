@@ -1,53 +1,102 @@
-# ECMAScript 概述
+# let 与块级作用域
 
-通常看做 JavaScript 的标准化规范，但实际上 JavaScript 是 ECMAScript 的扩展语言。因为在 ECMAScript 中只提供了最基本的语法。JavaScript 实现了 ECMAScript 语言的标准，并且在此基础之上做了扩展。
+> 作用域 —— 某个成员能够起作用的范围
 
-![JavaScript@Web](assets/JavaScript@Web.png)
+在此之前，ES 中只有 2 种作用域：
 
-![JavaScript@Node.js](assets/JavaScript@Node.js.png)
+- 全局作用域
+- 函数作用域
+- 块级作用域（ES 2015 新增）
 
-JavaScript 语言本身指的就是 ECMAScript，从 2015 年开始 ES 保持每年一个版本的迭代：
+**块** —— 代码中用 `{}` 所包裹起来的范围，例如：
 
-![ECMAScript-version](assets/ECMAScript-version.png)
+```js
+if (true) {
+  console.log('Darwin')
+}
 
-> ES5 之后，ECMAScript 开始按照年份命名。很多人也把 ES2015 称之为 ES6
-
-# ECMAScript 2015
-
-[ECMAScript® 2015 Language Specification](http://ecma-international.org/ecma-262/6.0/)
-
-> 即 ES6，最新 ECMAScript 标准的代表版本
-
-- 相比于 ES5.1 的变化比较大
-- 自此，标准命名规则发生变化，更准确的缩写名称：ES 2015
-
-有些开发者喜欢用 ES6 泛指 ES 5.1 之后的所有的新标准。例如，“使用 ES6 的  async 和 await”，实际上 async 函数是 ES 2017 中指定的标准。
-
-ES 5.1 基础之上的变化：
-
-- 解决原有语法上的一些问题或不足
-- 对原有语法进行增强
-- 全新的对象、全新的方法、全新的功能
-- 全新的数据类型和数据结构
-
-## 运行环境
-
-选择 Node.js 环境去做具体的尝试
-
-> [Node.js ES2015 Support](https://node.green/#ES2015)
-
-安装 Nodemon：https://www.npmjs.com/package/nodemon
-
-作用：修改完代码后自动执行代码
-
-```sh
-$ npm i nodemon --save-dev
+for (var i = 0; i < 10; i++) {
+  console.log('Darwin')
+}
 ```
 
-运行：
+以前块没有独立的作用域
 
-```sh
-$ npx nodemon .\prepare.js
+```js
+if (true) {
+  var foo = 'Darwin'
+}
+console.log(foo)
+// -> Darwin
 ```
 
-![nodemon-code](assets/nodemon-code.gif)
+有了 *块级作用域* 之后，通过关键词 —— let，来声明变量，只能在声明的代码块中被访问。
+
+```js
+if (true) {
+  let foo = 'Darwin'
+}
+console.log(foo)
+```
+
+控制台报错：
+
+![let-error](assets/let-error.png)
+
+块级作用域使用实例：
+
+```js
+var elements = [{}, {}, {}]
+for (let i = 0; i < elements.length; i++) {
+  elements[i].onclick = function () {
+    console.log(i);
+  };
+}
+elements[1].onclick(); //-> 1
+
+```
+
+等价于：
+
+```js
+var elements = [{}, {}, {}]
+for (var i = 0; i < elements.length; i++) {
+  elements[i].onclick = (function () {
+    return function () {
+      console.log(i);
+    }
+  }(i));
+}
+
+```
+
+在 for 循环内实际有 2 层作用域：
+
+```js
+for (let i = 0; i < 3; i++) {
+  let i = 'foo'
+  console.log(i)
+}
+```
+
+输出：
+
+```
+foo
+foo
+foo
+```
+
+拆解 for 循环：
+
+```js
+for (...) {
+  let i = 0;
+  if (i < 3) {
+    let i = 'foo';
+    console.log(i);
+  }
+  i++;
+}
+```
+
