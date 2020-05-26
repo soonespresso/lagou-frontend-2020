@@ -1,30 +1,27 @@
-# 数组的解构
+# 模板字符串字面量
 
-简化操作实例：
+支持多行字符串：
 
 ```js
-function _array(...array) {
-  console.log(array);
-}
-_array(1, 2, 3);
+const str = `Hello ES2015, 
+this is a \`string.\``;
+console.log(str);
 
-// -> [ 1, 2, 3 ]
-
-function _object({...obj}) {
-  console.log(obj);
-}
-const name = 'Darwin';
-const age = 32;
-_object([name, age])
-
-// -> { '0': 'Darwin', '1': 32 }
-
-const path = '/foo/bar/baz';
-const [, rootDir] = path.split('/');
-console.log(rootDir);
-
-// -> foo
 ```
 
+ ![string-line-break](assets/string-line-break.png)
 
+插值表达式：
+
+```js
+const str = `Hello ES2015, 
+this is a \`string.\``;
+console.log(str);
+
+const name = 'Darwin';
+const msg = `Hey, ${name} —— ${1 + 2} —— ${Math.random()}`;
+console.log(msg);
+
+// -> Hey, Darwin —— 3 —— 0.02066608045440055
+```
 
