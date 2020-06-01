@@ -1,14 +1,29 @@
-# 字符串的扩展方法
+# 参数默认值
 
-- includes()
-- startsWith()
-- endsWith()
+> Default parameters
 
 ```js
-const message = 'Error: foo is not defined.'
+// 多个参数是，带有默认值的参数一定要放在最后
+function foo (bar, enable = true) {
+  console.log('foo invoked - enable')
+  console.log(enable)
+}
 
-console.log(message.startsWith('Error')); // -> true
-console.log(message.endsWith('.')); // -> true
-console.log(message.includes('foo')); // -> true
+foo()
+
+```
+
+# 剩余参数
+
+> Rest parameters
+
+```js
+// ...args 仅出现在形参最后一位仅使用一次
+function foo(first, ...args) {
+  console.log(args);
+}
+
+foo(1, 2, 3, 4, 5)
+// -> [ 1, 2, 3, 4, 5 ]
 ```
 

@@ -1,5 +1,12 @@
-const message = 'Error: foo is not defined.'
+function foo (bar, enable = true) {
+  console.log('foo invoked - enable')
+  console.log(enable)
+}
 
-console.log(message.startsWith('Error'));
-console.log(message.endsWith('.'));
-console.log(message.includes('foo'));
+foo()
+
+function foo(...args) {
+  console.log(args);
+}
+
+foo(1, 2, 3, 4, 5)
