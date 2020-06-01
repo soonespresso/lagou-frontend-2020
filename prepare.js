@@ -1,12 +1,6 @@
-function foo (bar, enable = true) {
-  console.log('foo invoked - enable')
-  console.log(enable)
-}
+// 展开数组
 
-foo()
+const arr = ['Darwin', 'Newton', 'Turing']
 
-function foo(...args) {
-  console.log(args);
-}
-
-foo(1, 2, 3, 4, 5)
+console.log.apply(console, arr)
+console.log(...arr)
