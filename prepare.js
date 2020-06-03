@@ -1,32 +1,18 @@
-const inc = n => n + 1;
-console.log(inc(100))
 
-const arr = [1, 2, 3, 4, 5, 6, 7]
-console.log(arr.filter(i => i % 2));
+const bar = '345'
 
+const obj = {
+  foo: 123,
+  bar,
 
-const person = {
-  name: 'Darwin',
-  sayHi: function() {
-    console.log(`Hi, my name is ${this.name}`)
+  method: function() {
+    console.log('Method')
   },
-  sayHello: () => {
-    console.log(`Hello, my name is ${this.name}`)
+  method1() {
+    console.log('Method1')
+    console.log(this);
   },
-  sayHiAsync: function() {
-    /* setTimeout(function() {
-      console.log(this)
-      console.log(`Hi, my name is ${this.name}`)
-    }, 1000) */
-    setTimeout(() => {
-      console.log(this)
-      console.log(`Hi, my name is ${this.name}`)
-    }, 1000)
-  },
+  [Math.random()]: 123
 }
-person.sayHi()
-person.sayHello()
-person.sayHiAsync()
-
-
-
+console.log(obj)
+obj.method1()
