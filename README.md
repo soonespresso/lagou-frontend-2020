@@ -1,139 +1,63 @@
-# Proxy
+# Reflect
 
-> 代理对象
+MDN Reflect：https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect
 
-如果想要监视某个对象的读写，可以使用 ES5 的 Object.defineProperty 方法对对象添加属性，来捕获对象的读写过程。在 ES2015 可以使用 Proxy 来实现。
+统一提供一套用于操作对象的API：
+
+- Reflect 属于一个静态类
+- Reflect 内部封装了一系列对对象的底层操作
+- Reflect 成员方法就是 Proxy 处理对象的默认实现
+
+例1：
 
 ```js
-const person = {
-  name: 'Darwin',
-  age: 20
+const obj = {
+  foo: '123',
+  bar: '456'
 };
 
-const personProxy = new Proxy(person, {
+const proxy = new Proxy(obj, {
   get(target, property) {
-    console.log(target, property);
-    return property in target ? target[property] : 'default';
-  },
-  set(target, property, value) {
-    if (property === 'age') {
-      if (!Number.isInteger(value)) {
-        throw new TypeError(`${value} is not an int`);
-      }
-    }
-    target[property] = value;
-    console.log(target, property, value);
+    console.log('watch logic~');
+    return Reflect.get(target, property);
   }
-});
+})
 
-console.log(personProxy.name);
-console.log(personProxy.title);
-
-personProxy.gender = true;
-personProxy.age = 100;
-personProxy.age = '10';
-
-
-// -> { name: 'Darwin', age: 20 } name
-// -> Darwin
-// -> { name: 'Darwin', age: 20 } title
-// -> default
-// -> { name: 'Darwin', age: 20, gender: true } gender true
-// -> { name: 'Darwin', age: 100, gender: true } age 100
-// -> E:\Workstation\Webland\MyCourse\Kaiwulagou\lagou-frontend-2020\prepare.js:14
-// ->         throw new TypeError(`${value} is not an int`);
-// ->         ^
-// -> 
-// -> TypeError: 10 is not an int
+console.log(proxy.foo);
 ```
 
-# Proxy vs Object.defineProperty()
+- 输出：
 
-> Proxy 是以非侵入的方式监管了对象的读写
+  ```
+  watch logic~
+  123
+  ```
 
-```js
-const person = {};
-
-Object.defineProperty(person, 'name', {
-  get() {
-    console.log('name get()');
-    return person._name;
-  },
-  set(value) {
-    console.log('name set()');
-    person._name = value;
-  }
-});
-
-Object.defineProperty(person, 'age', {
-  get() {
-    console.log('age get()');
-    return person._age;
-  },
-  set(value) {
-    console.log('age set()');
-    person._age = value;
-  }
-});
-
-person.age = 'Darwin';
-console.log(person.age, person);
-
-// -> age set()
-// -> age get()
-// -> Darwin { _age: 'Darwin' }
-```
-
-## Proxy 能够监视到更多对象操作
-
-defineProperty 只能监视属性的读写
-
-![proxy](assets/proxy.png)
+例2：
 
 ```js
-const person = {
+const obj = {
   name: 'Darwin',
-  age: 20
+  age: 31
 };
 
-const personProxy = new Proxy(person, {
+// console.log('name' in obj);
+// console.log(delete obj['name']);
+// console.log(Object.keys(obj));
 
-  deleteProperty(target, property) {
-    console.log('delete', property);
-    delete target[property];
-  }
-});
+console.log(Reflect.has(obj, 'name'));
+console.log(Reflect.deleteProperty(obj, 'name'));
+console.log(Reflect.ownKeys(obj));
 
-delete personProxy.age;
-console.log(person);
-
-// -> delete age
-// -> { name: 'Darwin' }
 ```
 
-## Proxy 更好的支持数组对象的监视
+- 输出：
 
-重写数组的操作方法
-
-```js
-const list = [];
-const listProxy = new Proxy(list, {
-  set(target, property, value) {
-    console.log('set', property, value);
-    target[property] = value;
-    return true; // 表示设置成功
-  }
-});
-
-listProxy.push(100);
-listProxy.push(99);
-
-
-// -> set 0 100
-// -> set length 1
-// -> set 1 99
-// -> set length 2
-```
+  ```
+  true
+  true
+  [ 'age' ]
+  ```
 
 
 
