@@ -1,68 +1,51 @@
-# 对象扩展方法
+# Proxy
 
-## Object.assign
+> 代理对象
 
-将多个源对象中的属性复制到一个目标对象中
-
-```js
-const source = {
-  a: 123,
-  b: 456
-}
-
-const source1 = {
-  b: 798,
-  d: 798,
-}
-
-const target = {
-  a: 456,
-  c: 456
-}
-
-const result = Object.assign(source, source1, target)
-console.log('source:', source);
-console.log('source1:', source1);
-console.log('target:', target);
-console.log('result:', result);
-console.log(target === result);
-console.log(source === result);
-
-// -> source:  { a: 456, b: 798, d: 798, c: 456 }
-// -> source1:  { b: 798, d: 798 }
-// -> target:  { a: 456, c: 456 }
-// -> result:  { a: 456, b: 798, d: 798, c: 456 }
-// -> false
-// -> true
-```
-
-用于复制
+如果想要监视某个对象的读写，可以使用 ES5 的 Object.defineProperty 方法对对象添加属性，来捕获对象的读写过程。在 ES2015 可以使用 Proxy 来实现。
 
 ```js
-function func(obj) {
-  const funcObj = Object.assign({}, obj)
-  funcObj.name = 'func obj'
-  console.log(funcObj);
-}
+const person = {
+  name: 'Darwin',
+  age: 20
+};
 
-const obj = { name: 'global obj'}
-func(obj)
-console.log(obj)
+const personProxy = new Proxy(person, {
+  get(target, property) {
+    console.log(target, property);
+    return property in target ? target[property] : 'default';
+  },
+  set(target, property, value) {
+    if (property === 'age') {
+      if (!Number.isInteger(value)) {
+        throw new TypeError(`${value} is not an int`);
+      }
+    }
+    target[property] = value;
+    console.log(target, property, value);
+  }
+});
 
-// -> { name: 'func obj' }
-// -> { name: 'global obj' }
+console.log(personProxy.name);
+console.log(personProxy.title);
+
+personProxy.gender = true;
+personProxy.age = 100;
+personProxy.age = '10';
+
+
+// -> { name: 'Darwin', age: 20 } name
+// -> Darwin
+// -> { name: 'Darwin', age: 20 } title
+// -> default
+// -> { name: 'Darwin', age: 20, gender: true } gender true
+// -> { name: 'Darwin', age: 100, gender: true } age 100
+// -> E:\Workstation\Webland\MyCourse\Kaiwulagou\lagou-frontend-2020\prepare.js:14
+// ->         throw new TypeError(`${value} is not an int`);
+// ->         ^
+// -> 
+// -> TypeError: 10 is not an int
 ```
 
-## Object.is
 
-判断两个值是否相等
-
-```js
-console.log(0 == false) // -> true
-console.log(0 === false) // -> false
-console.log(-0 === +0) // -> true
-console.log(NaN === NaN) // -> false
-console.log(Object.is(+0, -0)) // -> false
-console.log(Object.is(NaN, NaN)) // -> true
-```
 

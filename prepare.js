@@ -1,43 +1,27 @@
-const source = {
-  a: 123,
-  b: 456
-}
+const person = {
+  name: 'Darwin',
+  age: 20
+};
 
-const source1 = {
-  b: 798,
-  d: 798,
-}
+const personProxy = new Proxy(person, {
+  get(target, property) {
+    console.log(target, property);
+    return property in target ? target[property] : 'default';
+  },
+  set(target, property, value) {
+    if (property === 'age') {
+      if (!Number.isInteger(value)) {
+        throw new TypeError(`${value} is not an int`);
+      }
+    }
+    target[property] = value;
+    console.log(target, property, value);
+  }
+});
 
-const target = {
-  a: 456,
-  c: 456
-}
+console.log(personProxy.name);
+console.log(personProxy.title);
 
-const result = Object.assign(source, source1, target)
-console.log('source:', source);
-console.log('source1:', source1);
-console.log('target:', target);
-console.log('result:', result);
-console.log(target === result);
-console.log(source === result);
-console.log('\n\n');
-
-
-function func(obj) {
-  const funcObj = Object.assign({}, obj)
-  funcObj.name = 'func obj'
-  console.log(funcObj);
-}
-
-const obj = { name: 'global obj'}
-func(obj)
-console.log(obj)
-console.log('\n\n');
-
-
-console.log(0 == false)
-console.log(0 === false)
-console.log(-0 === +0)
-console.log(NaN === NaN)
-console.log(Object.is(+0, -0))
-console.log(Object.is(NaN, NaN))
+personProxy.gender = true;
+personProxy.age = 100;
+personProxy.age = '10';
