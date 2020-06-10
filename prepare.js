@@ -1,80 +1,108 @@
-// shared.js =================================
+// for...of
+/* 
+const arr = [100, 200, 300, 400]
 
-const cache = {};
-
-// a,js ======================================
-
-cache['foo'] = Math.random();
-
-// b,js ======================================
-
-cache['foo'] = '123';
-
-console.log(cache);
-
-console.log(
-  Symbol() === Symbol()
-);
-
-console.log(Symbol('foo'));
-console.log(Symbol('bar'));
-console.log(Symbol('baz'));
-
-
-const obj = {};
-
-obj[Symbol()] = '123';
-obj[Symbol()] = '456';
-console.log(obj);
-
-const obj1 = {
-  [Symbol()]: '123',
-  [Symbol()]: '456',
-};
-console.log(obj1);
-
-
-
-// 创建私有成员
-
-const name = Symbol();
-const person = {
-  [name]: 'Darwin',
-  say () {
-    console.log(this.name);
-  }
-};
-
-
-console.log(person[Symbol()]);
-
-
-
-console.log(Symbol('foo') === Symbol('foo'));
-const s1 = Symbol.for('foo');
-const s2 = Symbol.for('foo');
-console.log(s1 === s2);
-
-
-console.log(Symbol.for(true) === Symbol.for('true'));
-console.log(Symbol.iterator);
-console.log(Symbol.hasInstance);
-
-const obj2 = {
-  [Symbol.toStringTag]: 'X Object'
-  // toString() { return 'X Object' }
-};
-console.log(obj2.toString());
-
-
-const obj3 = {
-  [Symbol()]: 'symbol value',
-  foo: 'normal value'
-};
-
-for (let key in obj3) {
-  console.log(key);
+for (const item of arr) {
+  console.log(item)
+  if (item > 100)
+    break
 }
-console.log(Object.keys(obj3));
-console.log(JSON.stringify(obj3));
-console.log(Object.getOwnPropertySymbols(obj3));
+
+// arr.forEach() // 不能终止遍历
+// arr.some()
+// arr.every()
+
+const map = new Map()
+map.set('foo', '123')
+map.set('bar', '456')
+
+for (const [key, value] of map) {
+  console.log(key, value);
+}
+
+const obj = { foo: 123, bar: 456 }
+for (const item of obj) {
+  console.log(item)
+}
+*/
+
+
+// 迭代器（Iterable）
+/* 
+const set = new Set(['foo', 'bar', 'baz'])
+const iterator = set[Symbol.iterator]()
+
+console.log(iterator.next())
+console.log(iterator.next())
+console.log(iterator.next())
+console.log(iterator.next())
+ */
+
+
+// 实现可迭代接口（Iterable）
+/* const obj = {
+
+  store: ['foo', 'bar', 'baz'],
+
+  [Symbol.iterator]() {
+    let index = 0
+    const self = this;
+
+    return {// iterator
+      next() {
+        return {// IterationResult
+          value: self.store[index],
+          done: index++ >= self.store.length
+        }
+      }
+    }
+  }
+}
+
+for (const item of obj) {
+  console.log(item)
+} */
+
+// 迭代器设计模式
+// 场景：协同开发一个任务清单应用
+
+// My Code =========================
+
+const todos = {
+  life: ['eat', 'sleep', 'play'],
+  learn: ['Java', 'C++', 'Python'],
+  work: ['tea'],
+
+  each(callback) {
+    const all = [].concat(this.life, this.learn, this.work)
+    for (const item of all) {
+      callback(item)
+    }
+  },
+
+  [Symbol.iterator]() {
+    const all = [...this.life, ...this.learn, ...this.work];
+    let index = 0;
+    return {
+      next() {
+        return {
+          value: all[index],
+          done: index++ >= all.length
+        }
+      }
+    }
+  }
+}
+
+// Your Code =======================
+
+todos.each((item) => {
+  console.log(item)
+})
+
+console.log('\n')
+
+
+for (const item of todos) {
+  console.log(item)
+}

@@ -1,134 +1,173 @@
-# Symbol
+# for .. of
 
-一种全新的原始数据类型，最主要的作用就是为对象添加独一无二的属性名
-
-```js
-// shared.js =================================
-
-const cache = {};
-
-// a.js ======================================
-
-cache['foo'] = Math.random();
-
-// b.js ======================================
-
-cache['foo'] = '123';
-
-console.log(cache);
-
-console.log(
-  Symbol() === Symbol()
-);
-
-console.log(Symbol('foo'));
-console.log(Symbol('bar'));
-console.log(Symbol('baz'));
-
-
-// -> { foo: '123' }
-// -> false
-// -> Symbol(foo)
-// -> Symbol(bar)
-// -> Symbol(baz)
-
-
-const obj = {};
-
-obj[Symbol()] = '123';
-obj[Symbol()] = '456';
-console.log(obj);
-
-const obj1 = {
-  [Symbol()]: '123',
-  [Symbol()]: '456',
-};
-console.log(obj1);
-
-// -> { [Symbol()]: '123', [Symbol()]: '456' }
-// -> { [Symbol()]: '123', [Symbol()]: '456' }
-
-
-// a,js ======================================
-// 创建私有成员
-
-const name = Symbol();
-const person = {
-  [name]: 'Darwin',
-  say () {
-    console.log(this.name);
-  }
-};
-
-// b.js ======================================
-console.log(person[Symbol()]);
-
-
-// -> undefined
-```
-
-截止到 ES2019 一共定义了 6种原始数据类型：
-
-- String
-- Number
-- Boolean
-- Null
-- Undefined
-- Symbol
-- （BigInt）未来新增
-
-加上 Object 类型一共是 7种数据类型。
-
-# Symbol 补充
-
-**Symbol.for**
-
-内部维护一个全局注册表，为字符串和 Symbol 值提供一一对应的关系：
+作为遍历所有数据结构的统一方式
 
 ```js
-console.log(Symbol('foo') === Symbol('foo'));
-const s1 = Symbol.for('foo');
-const s2 = Symbol.for('foo');
-console.log(s1 === s2);
+const arr = [100, 200, 300, 400]
 
-
-// -> false
-// -> true
-```
-
-**Symbol 内置属性与属性获取**
-
-```js
-console.log(Symbol.for(true) === Symbol.for('true'));
-console.log(Symbol.iterator);
-console.log(Symbol.hasInstance);
-
-const obj2 = {
-  [Symbol.toStringTag]: 'X Object'
-  // toString() { return 'X Object' }
-};
-console.log(obj2.toString());
-
-
-const obj3 = {
-  [Symbol()]: 'symbol value',
-  foo: 'normal value'
-};
-
-for (let key in obj3) {
-  console.log(key);
+for (const item of arr) {
+  console.log(item)
+  if (item > 100)
+    break
 }
-console.log(Object.keys(obj3));
-console.log(JSON.stringify(obj3));
-console.log(Object.getOwnPropertySymbols(obj3));
+
+// arr.forEach() // 不能终止遍历
+// arr.some()
+// arr.every()
+
+const map = new Map()
+map.set('foo', '123')
+map.set('bar', '456')
+
+for (const [key, value] of map) {
+  console.log(key, value);
+}
+
+const obj = { foo: 123, bar: 456 }
+for (const item of obj) {
+  console.log(item)
+}
 
 
-Symbol(Symbol.iterator)
-Symbol(Symbol.hasInstance)
-[object X Object]
-foo
-[ 'foo' ]
-{"foo":"normal value"}
-[ Symbol() ]
+// -> 100
+// -> 200
+// -> foo 123
+// -> bar 456
+// -> E:\Workstation\Webland\MyCourse\Kaiwulagou\lagou-frontend-2020\prepare.js:22
+// -> for (const item of obj) {
+// ->                    ^
+// ->
+// -> TypeError: obj is not iterable
+```
+
+# 可迭代的接口
+
+> Iterable
+
+for...of 循环是一种数据统一遍历方式，ES 中能够表示有结构的数据类型越来越多，为了给各种各样的数据结构提供统一遍历方式，ES 2015 提供了 Iterable 接口，实现 Iterable 接口 for...of 的前提。
+
+![iterator](assets/iterator.png)
+
+
+
+所有可以被 for...of 循环遍历的数据类型，都必须实现 Iterable 接口，在内部必须挂载一个 iterator 方法，该方法返回带有 next() 方法的对象，通过调用 next() 方法达到遍历。
+
+ ![iterator-next](assets/iterator-next.png)
+
+```js
+// 迭代器（Iterable）
+
+const set = new Set(['foo', 'bar', 'baz'])
+const iterator = set[Symbol.iterator]()
+
+console.log(iterator.next())
+console.log(iterator.next())
+console.log(iterator.next())
+console.log(iterator.next())
+
+// -> { value: 'foo', done: false }
+// -> { value: 'bar', done: false }   
+// -> { value: 'baz', done: false }   
+// -> { value: undefined, done: true }
+```
+
+# 实现可迭代接口
+
+> Iterable
+
+```js
+const obj = {
+
+  store: ['foo', 'bar', 'baz'],
+
+  [Symbol.iterator]() {
+    let index = 0
+    const self = this;
+
+    return {// iterator
+      next() {
+        return {// IterationResult
+          value: self.store[index],
+          done: index++ >= self.store.length
+        }
+      }
+    }
+  }
+}
+
+for (const item of obj) {
+  console.log(item)
+}
+
+// -> foo
+// -> bar
+// -> baz
+```
+
+迭代器模式
+
+> Iterator
+
+```js
+// 迭代器设计模式
+// 场景：协同开发一个任务清单应用
+
+// My Code =========================
+
+const todos = {
+  life: ['eat', 'sleep', 'play'],
+  learn: ['Java', 'C++', 'Python'],
+  work: ['tea'],
+
+  each(callback) {
+    const all = [].concat(this.life, this.learn, this.work)
+    for (const item of all) {
+      callback(item)
+    }
+  },
+
+  [Symbol.iterator]() {
+    const all = [...this.life, ...this.learn, ...this.work];
+    let index = 0;
+    return {
+      next() {
+        return {
+          value: all[index],
+          done: index++ >= all.length
+        }
+      }
+    }
+  }
+}
+
+// Your Code =======================
+
+todos.each((item) => {
+  console.log(item)
+})
+
+console.log('\n')
+
+
+for (const item of todos) {
+  console.log(item)
+}
+
+
+// -> eat
+// -> sleep
+// -> play
+// -> Java
+// -> C++
+// -> Python
+// -> tea
+// -> 
+// -> eat
+// -> sleep
+// -> play
+// -> Java
+// -> C++
+// -> Python
+// -> tea
 ```
 
