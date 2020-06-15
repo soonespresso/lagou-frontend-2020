@@ -1,134 +1,104 @@
-# Symbol
+# 生成器
 
-一种全新的原始数据类型，最主要的作用就是为对象添加独一无二的属性名
+> Generator
 
-```js
-// shared.js =================================
-
-const cache = {};
-
-// a.js ======================================
-
-cache['foo'] = Math.random();
-
-// b.js ======================================
-
-cache['foo'] = '123';
-
-console.log(cache);
-
-console.log(
-  Symbol() === Symbol()
-);
-
-console.log(Symbol('foo'));
-console.log(Symbol('bar'));
-console.log(Symbol('baz'));
-
-
-// -> { foo: '123' }
-// -> false
-// -> Symbol(foo)
-// -> Symbol(bar)
-// -> Symbol(baz)
-
-
-const obj = {};
-
-obj[Symbol()] = '123';
-obj[Symbol()] = '456';
-console.log(obj);
-
-const obj1 = {
-  [Symbol()]: '123',
-  [Symbol()]: '456',
-};
-console.log(obj1);
-
-// -> { [Symbol()]: '123', [Symbol()]: '456' }
-// -> { [Symbol()]: '123', [Symbol()]: '456' }
-
-
-// a,js ======================================
-// 创建私有成员
-
-const name = Symbol();
-const person = {
-  [name]: 'Darwin',
-  say () {
-    console.log(this.name);
-  }
-};
-
-// b.js ======================================
-console.log(person[Symbol()]);
-
-
-// -> undefined
-```
-
-截止到 ES2019 一共定义了 6种原始数据类型：
-
-- String
-- Number
-- Boolean
-- Null
-- Undefined
-- Symbol
-- （BigInt）未来新增
-
-加上 Object 类型一共是 7种数据类型。
-
-# Symbol 补充
-
-**Symbol.for**
-
-内部维护一个全局注册表，为字符串和 Symbol 值提供一一对应的关系：
+避免异步编程中回调嵌套过深，提供更好的异步编程解决方案
 
 ```js
-console.log(Symbol('foo') === Symbol('foo'));
-const s1 = Symbol.for('foo');
-const s2 = Symbol.for('foo');
-console.log(s1 === s2);
-
-
-// -> false
-// -> true
-```
-
-**Symbol 内置属性与属性获取**
-
-```js
-console.log(Symbol.for(true) === Symbol.for('true'));
-console.log(Symbol.iterator);
-console.log(Symbol.hasInstance);
-
-const obj2 = {
-  [Symbol.toStringTag]: 'X Object'
-  // toString() { return 'X Object' }
-};
-console.log(obj2.toString());
-
-
-const obj3 = {
-  [Symbol()]: 'symbol value',
-  foo: 'normal value'
-};
-
-for (let key in obj3) {
-  console.log(key);
+function * foo(params) {
+  console.log('zce')
+  return 100
 }
-console.log(Object.keys(obj3));
-console.log(JSON.stringify(obj3));
-console.log(Object.getOwnPropertySymbols(obj3));
+
+const result = foo()
+console.log(result.next())
+console.log('END')
+
+// -> zce
+// -> { value: 100, done: true }
+// -> END
+```
+
+生成器函数会返回一个生成器对象，调用该对象的 next 方法，才会让生成器函数的函数体开始执行，执行过程中一旦遇到了 yield 关键词，执行过程就会被暂停。而且 yield 后面的值将会作为 next 的结果返回。继续调用生成器对象的 next 方法，会从生成器函数暂停的地方继续执行，周而复始直至完全结束。—— 惰性执行。
+
+```js
+
+function * foo(params) {
+  console.log('111111')
+  yield 100
+  console.log('222222')
+  yield 200
+  console.log('333333')
+  yield 300
+}
+
+const generator = foo()
+console.log(generator.next())
+console.log(generator.next())
+console.log(generator.next())
+console.log(generator.next())
+
+// -> 111111
+// -> { value: 100, done: false }
+// -> 222222
+// -> { value: 200, done: false }
+// -> 333333
+// -> { value: 300, done: false }
+// -> { value: undefined, done: true }
+```
+
+# 生成器应用
+
+```js
+// 案例1：发号器
+
+function * createIdMaker() {
+  let id = 1
+  while (true) {
+    yield id++
+  }
+}
+
+const idMaker = createIdMaker()
+console.log(idMaker.next().value)
+console.log(idMaker.next().value)
+console.log(idMaker.next().value)
+console.log(idMaker.next().value)
+console.log(idMaker.next().value)
+
+// -> 1
+// -> 2
+// -> 3
+// -> 4
+// -> 5
+```
+
+```js
+// 使用 Generator 函数实现 iterator 方法
+
+const todos = {
+  life: ['eat', 'sleep', 'play'],
+  learn: ['C++', 'Java', 'Python'],
+  work: ['Coding'],
+  [Symbol.iterator]: function* () {
+    const all = [...this.life, ...this.learn, ...this.work]
+    for (const item of all) {
+      yield item
+    }
+  }
+}
+
+for (const item of todos) {
+  console.log(item)
+}
 
 
-Symbol(Symbol.iterator)
-Symbol(Symbol.hasInstance)
-[object X Object]
-foo
-[ 'foo' ]
-{"foo":"normal value"}
-[ Symbol() ]
+// -> eat
+// -> sleep
+// -> play
+// -> C++
+// -> Java
+// -> Python
+// -> Coding
 ```
 

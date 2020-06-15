@@ -1,80 +1,64 @@
-// shared.js =================================
-
-const cache = {};
-
-// a,js ======================================
-
-cache['foo'] = Math.random();
-
-// b,js ======================================
-
-cache['foo'] = '123';
-
-console.log(cache);
-
-console.log(
-  Symbol() === Symbol()
-);
-
-console.log(Symbol('foo'));
-console.log(Symbol('bar'));
-console.log(Symbol('baz'));
-
-
-const obj = {};
-
-obj[Symbol()] = '123';
-obj[Symbol()] = '456';
-console.log(obj);
-
-const obj1 = {
-  [Symbol()]: '123',
-  [Symbol()]: '456',
-};
-console.log(obj1);
-
-
-
-// 创建私有成员
-
-const name = Symbol();
-const person = {
-  [name]: 'Darwin',
-  say () {
-    console.log(this.name);
-  }
-};
-
-
-console.log(person[Symbol()]);
-
-
-
-console.log(Symbol('foo') === Symbol('foo'));
-const s1 = Symbol.for('foo');
-const s2 = Symbol.for('foo');
-console.log(s1 === s2);
-
-
-console.log(Symbol.for(true) === Symbol.for('true'));
-console.log(Symbol.iterator);
-console.log(Symbol.hasInstance);
-
-const obj2 = {
-  [Symbol.toStringTag]: 'X Object'
-  // toString() { return 'X Object' }
-};
-console.log(obj2.toString());
-
-
-const obj3 = {
-  [Symbol()]: 'symbol value',
-  foo: 'normal value'
-};
-
-for (let key in obj3) {
-  console.log(key);
+/* function * foo(params) {
+  console.log('zce')
+  return 100
 }
-console.log(Object.keys(obj3));
-console.log(JSON.stringify(obj3));
-console.log(Object.getOwnPropertySymbols(obj3));
+
+const result = foo()
+console.log(result.next())
+console.log('END')
+ */
+
+
+/* function * foo(params) {
+  console.log('111111')
+  yield 100
+  console.log('222222')
+  yield 200
+  console.log('333333')
+  yield 300
+}
+
+const generator = foo()
+console.log(generator.next())
+console.log(generator.next())
+console.log(generator.next())
+console.log(generator.next()) */
+
+
+// 案例1：发号器
+
+/* function * createIdMaker() {
+  let id = 1
+  while (true) {
+    yield id++
+  }
+}
+
+const idMaker = createIdMaker()
+console.log(idMaker.next().value)
+console.log(idMaker.next().value)
+console.log(idMaker.next().value)
+console.log(idMaker.next().value)
+console.log(idMaker.next().value) */
+
+
+// 使用 Generator 函数实现 iterator 方法
+
+const todos = {
+  life: ['eat', 'sleep', 'play'],
+  learn: ['C++', 'Java', 'Python'],
+  work: ['Coding'],
+  [Symbol.iterator]: function* () {
+    const all = [...this.life, ...this.learn, ...this.work]
+    for (const item of all) {
+      yield item
+    }
+  }
+}
+
+for (const item of todos) {
+  console.log(item)
+}
+
+
+ 
