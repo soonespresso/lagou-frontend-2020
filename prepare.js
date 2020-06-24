@@ -1,64 +1,77 @@
-/* function * foo(params) {
-  console.log('zce')
-  return 100
+// ECMAScript 2016 //
+
+// Array.prototype.includes
+
+const arr = ['foo', 1, NaN, false];
+
+console.log(arr.indexOf('foo'));
+console.log(arr.indexOf('bar'));
+console.log(arr.indexOf(NaN));
+console.log(arr.includes(NaN));
+
+// 指数运算符
+
+console.log(Math.pow(2, 10));
+console.log(2 ** 10);
+
+
+// ECMAScript 2017 //
+
+const obj = {
+  foo: 'value1',
+  bar: 'value2',
 }
 
-const result = foo()
-console.log(result.next())
-console.log('END')
- */
+// Object.values
 
+console.log(Object.values(obj));
 
-/* function * foo(params) {
-  console.log('111111')
-  yield 100
-  console.log('222222')
-  yield 200
-  console.log('333333')
-  yield 300
+// Object.entries
+
+for (const [key, value] of Object.entries(obj)) {
+  console.log(key, value);
 }
 
-const generator = foo()
-console.log(generator.next())
-console.log(generator.next())
-console.log(generator.next())
-console.log(generator.next()) */
+console.log(new Map(Object.entries(obj)));
 
+// Object.getOwnPropertyDescriptors
 
-// 案例1：发号器
-
-/* function * createIdMaker() {
-  let id = 1
-  while (true) {
-    yield id++
+const lannister1 = {
+  firstName: 'Tywin',
+  lastName: 'Lannister',
+  get fullName() {
+    return `${this.firstName} ${this.lastName}`;
   }
 }
 
-const idMaker = createIdMaker()
-console.log(idMaker.next().value)
-console.log(idMaker.next().value)
-console.log(idMaker.next().value)
-console.log(idMaker.next().value)
-console.log(idMaker.next().value) */
+const lannister2 = Object.assign({}, lannister1);
+lannister2.firstName = 'Tyrion';
+console.log(lannister2, lannister2.fullName);
 
 
-// 使用 Generator 函数实现 iterator 方法
+const descriptors = Object.getOwnPropertyDescriptors(lannister1);
+console.log(descriptors);
 
-const todos = {
-  life: ['eat', 'sleep', 'play'],
-  learn: ['C++', 'Java', 'Python'],
-  work: ['Coding'],
-  [Symbol.iterator]: function* () {
-    const all = [...this.life, ...this.learn, ...this.work]
-    for (const item of all) {
-      yield item
-    }
-  }
+const lannister2_1 = Object.defineProperties({}, descriptors);
+lannister2_1.firstName = 'Tyrion';
+console.log(lannister2_1.fullName);
+
+// String.prototype.padStart / String.prototype.padEnd
+
+const books = {
+  html: 5,
+  css: 16,
+  javascript: 128
+};
+
+for (const [name, count] of Object.entries(books)) {
+  console.log(`${name.padEnd(12, '-')}|${count.toString().padStart(3, '0')}`);
 }
 
-for (const item of todos) {
-  console.log(item)
+// 在函数参数中添加尾逗号
+
+function foo(bar, baz, ) {
+
 }
 
-
- 
+const list = [100, 200, 300, ]
