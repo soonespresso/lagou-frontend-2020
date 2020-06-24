@@ -104,7 +104,7 @@ for (const item of obj) {
 // -> baz
 ```
 
-迭代器模式
+# 迭代器模式
 
 > Iterator
 
