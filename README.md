@@ -1,29 +1,31 @@
-# lagou-frontend-2020
+# 异步编程
 
-拉钩教育 —— 大前端高薪训练营
+> 单线程 JavaScript 异步方案
 
-- Part 1 · JavaScript 深度剖析
-  - 模块一 ES6+ 与 TypeScript
-    - 任务一：ECMAScript 新特性
-      - [ECMAScript](https://github.com/soonespresso/lagou-frontend-2020/tree/ecmascript)
-      - [ES2015 let 与块级作用域](https://github.com/soonespresso/lagou-frontend-2020/tree/es-let)
-      - [ES2015 const](https://github.com/soonespresso/lagou-frontend-2020/tree/es-const)
-      - [ES2015 解构](https://github.com/soonespresso/lagou-frontend-2020/tree/es-destructuring)
-      - [ES2015 模板字符串](https://github.com/soonespresso/lagou-frontend-2020/tree/es-template-literals)
-      - [ES2015 字符串的扩展方法](https://github.com/soonespresso/lagou-frontend-2020/tree/es-string-extend)
-      - [ES2015 参数](https://github.com/soonespresso/lagou-frontend-2020/tree/es-params)
-      - [ES2015 展开数组](https://github.com/soonespresso/lagou-frontend-2020/tree/es-spread)
-      - [ES2015 箭头函数](https://github.com/soonespresso/lagou-frontend-2020/tree/es-arrow-function)
-      - [ES2015 对象字面量的增强](https://github.com/soonespresso/lagou-frontend-2020/tree/es-enhanced-object-literals)
-      - [ES2015 对象扩展方法](https://github.com/soonespresso/lagou-frontend-2020/tree/es-object-extend)
-      - [ES2015 Proxy](https://github.com/soonespresso/lagou-frontend-2020/tree/es-proxy)
-      - [ES2015 Reflect](https://github.com/soonespresso/lagou-frontend-2020/tree/es-reflect)
-      - [ES2015 Promise](https://github.com/soonespresso/lagou-frontend-2020/tree/es-promise)
-      - [ES2015 Class 类](https://github.com/soonespresso/lagou-frontend-2020/tree/es-class)
-      - [ES2015 Set](https://github.com/soonespresso/lagou-frontend-2020/tree/es-set)
-      - [ES2015 Map](https://github.com/soonespresso/lagou-frontend-2020/tree/es-map)
-      - [ES2015 Symbol](https://github.com/soonespresso/lagou-frontend-2020/tree/es-symbol)
-      - [ES2015 for...of 循环](https://github.com/soonespresso/lagou-frontend-2020/tree/es-forof)
-      - [ES2015 生成器](https://github.com/soonespresso/lagou-frontend-2020/tree/es-generator)
-      - [ES 2016、2017 概述](https://github.com/soonespresso/lagou-frontend-2020/tree/es-201617)
+## 采用单线程模式工作的原因
+
+这与 JavaScript 最早的设计初衷有关。最早 JavaScript 这门语言就是一门运行在浏览器上的脚本语言，其目的是为了实现页面的动态交互，而实现页面交互的核心就是 DOM操作。这也就确定了它必须使用单线程模式，否则就会出现很复杂的线程同步问题。
+
+> 试想一下，在 JavaScript 中有多个线程一起工作，其中一个线程修改了某个 DOM 元素，另一个线程又同时删除了这个元素，此时浏览器就无法明确以哪个线程的结果为为准。
+
+为了避免线程同步的问题，从一开始 JavaScript 就被设计为单线程模式工作，这也就成了这门语言最为核心的特性之一。
+
+JS 执行环境中负责执行代码的线程只有一个，当有多个任务时就必须排队依次执行。这种模式优点是安全、简单，缺点也很明显，当某个任务特别耗时，后面的任务就必须排队等待这个任务的结束，这会导致整个程序的执行会被拖延出现假死的情况。
+
+为了解决耗时任务阻塞执行的问题，JavaScript 将任务的执行模式分成了 2 种：
+
+- 同步模式（Synchronous）
+- 异步模式（Asynchronous）
+
+## 内容概要
+
+> Summary
+
+- 同步模式 与 异步模式
+- 事件循环 与 消息队列
+- 异步编程的几种方式
+- Promise 异步方案、宏任务 / 微任务队列
+- Generator 异步方案、Async / Await 语法糖
+
+
 
