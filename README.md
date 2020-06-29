@@ -1,31 +1,13 @@
-# 异步编程
+# 同步模式
 
-> 单线程 JavaScript 异步方案
+> Synchronous
 
-## 采用单线程模式工作的原因
+调用栈参考资料：
 
-这与 JavaScript 最早的设计初衷有关。最早 JavaScript 这门语言就是一门运行在浏览器上的脚本语言，其目的是为了实现页面的动态交互，而实现页面交互的核心就是 DOM操作。这也就确定了它必须使用单线程模式，否则就会出现很复杂的线程同步问题。
-
-> 试想一下，在 JavaScript 中有多个线程一起工作，其中一个线程修改了某个 DOM 元素，另一个线程又同时删除了这个元素，此时浏览器就无法明确以哪个线程的结果为为准。
-
-为了避免线程同步的问题，从一开始 JavaScript 就被设计为单线程模式工作，这也就成了这门语言最为核心的特性之一。
-
-JS 执行环境中负责执行代码的线程只有一个，当有多个任务时就必须排队依次执行。这种模式优点是安全、简单，缺点也很明显，当某个任务特别耗时，后面的任务就必须排队等待这个任务的结束，这会导致整个程序的执行会被拖延出现假死的情况。
-
-为了解决耗时任务阻塞执行的问题，JavaScript 将任务的执行模式分成了 2 种：
-
-- 同步模式（Synchronous）
-- 异步模式（Asynchronous）
-
-## 内容概要
-
-> Summary
-
-- 同步模式 与 异步模式
-- 事件循环 与 消息队列
-- 异步编程的几种方式
-- Promise 异步方案、宏任务 / 微任务队列
-- Generator 异步方案、Async / Await 语法糖
-
-
-
+- [The JavaScript Execution Context, Call-stack & Event Loop](https://dev.to/thebabscraig/the-javascript-execution-context-call-stack-event-loop-1if1)
+- [The JavaScript Call Stack - What It Is and Why It's Necessary](https://www.freecodecamp.org/news/understanding-the-javascript-call-stack-861e41ae61d4/)
+- [JavaScript Call Stack](https://www.javascripttutorial.net/javascript-call-stack/)
+- [Call stack（调用栈）](https://developer.mozilla.org/zh-CN/docs/Glossary/Call_stack)
+- [JavaScript js调用堆栈（一）](https://www.cnblogs.com/lhh520/p/10175420.html)
+- [JavaScript js调用堆栈（二）](https://www.cnblogs.com/lhh520/p/10176982.html)
+- [JavaScript js调用堆栈（三）](https://www.cnblogs.com/lhh520/p/10180589.html)
