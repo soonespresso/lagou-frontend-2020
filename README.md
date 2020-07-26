@@ -4,4 +4,5 @@
 - [同步模式](https://github.com/soonespresso/lagou-frontend-2020/tree/async-synchronous)
 - [异步模式](https://github.com/soonespresso/lagou-frontend-2020/tree/async-asynchronous)
 - [回调函数](https://github.com/soonespresso/lagou-frontend-2020/tree/async-callback-function)
+- [Promise](https://github.com/soonespresso/lagou-frontend-2020/tree/async-promise)
 
