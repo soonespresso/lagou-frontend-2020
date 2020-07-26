@@ -1,0 +1,25 @@
+{
+  "name": "lagou-frontend-2020",
+  "version": "1.0.0",
+  "description": "> 一种更优的异步编程统一方案",
+  "main": "promise.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soonespresso/lagou-frontend-2020.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/soonespresso/lagou-frontend-2020/issues"
+  },
+  "homepage": "https://github.com/soonespresso/lagou-frontend-2020#readme",
+  "devDependencies": {
+    "html-webpack-plugin": "^4.3.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
