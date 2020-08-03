@@ -6,4 +6,5 @@
 - [回调函数](https://github.com/soonespresso/lagou-frontend-2020/tree/async-callback-function)
 - [Promise](https://github.com/soonespresso/lagou-frontend-2020/tree/async-promise)
 - [Generator](https://github.com/soonespresso/lagou-frontend-2020/tree/async-generator)
+- [Async / Await](https://github.com/soonespresso/lagou-frontend-2020/tree/async-await)
 
