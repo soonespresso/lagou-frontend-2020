@@ -13,7 +13,7 @@ for (let i = 0; i < 3; i++) {
 }
 
 
-for (...) {
+for (;;) {
   let i = 0;
   if (i < 3) {
     let i = 'foo';
